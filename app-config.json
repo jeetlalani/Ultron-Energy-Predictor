@@ -1,0 +1,16 @@
+{
+    "command": "python3 app.py",
+    "build_path": "./",
+    "stack": "python_3_13",
+    "env_variables": {
+        "QUICKML_ENDPOINT_URL": "https://api.catalyst.zoho.in/quickml/v1/project/101788000000016049/endpoints/predict",
+        "QUICKML_REFRESH_TOKEN": "1000.5feba90ae09aa5f934de2a068579e9fb.3fe724ce09102fa695f7d74bb5cc41a0",
+        "ZOHO_CLIENT_ID": "1000.OJI4N3ZBDK6YMB20RAMO75U4YEJ5DE",
+        "ZOHO_CLIENT_SECRET": "a1421b6152ce91342062ade0c4de4deb67cb26e823",
+        "QUICKML_ENDPOINT_KEY": "d309ef33744e6dcf892a6a32f98a5db9bc84a47e0b0aa48815ae87b82a9329dc1d43381d85ca450cd2eb2bcebf67df7c"
+        
+        
+    },
+    "memory": 256,
+    "scripts": {}
+}

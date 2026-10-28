@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ultron Energy Predictor</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Bricolage+Grotesque:wght@600;800&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:true}
+:root{--bg:#EEF3FA;--card:#FFFFFF;--ink:#0F1B2D;--mut:#55657A;--line:#D3DCE8;--st:#0A8068;--gr:#3949AB;--cr:#C62828;--wa:#9A5B00;--onb:#fff;--c1:#0891B2;--c2:#7C3AED;--c3:#DB2777;--ga:rgba(56,189,248,.5);--gc:rgba(167,139,250,.38);--gb:rgba(45,212,191,.2);--glow:rgba(8,145,178,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#060A13;--card:#0E1626;--ink:#E8F0FA;--mut:#94A7BE;--line:#22324A;--st:#3CC9A6;--gr:#8C9BFF;--cr:#FF6B64;--wa:#F0B24A;--onb:#07101C;--c1:#22D3EE;--c2:#A78BFA;--c3:#F472B6;--ga:rgba(34,211,238,.5);--gc:rgba(139,92,246,.42);--gb:rgba(52,211,153,.14);--glow:rgba(34,211,238,.45)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#060A13;--card:#0E1626;--ink:#E8F0FA;--mut:#94A7BE;--line:#22324A;--st:#3CC9A6;--gr:#8C9BFF;--cr:#FF6B64;--wa:#F0B24A;--onb:#07101C;--c1:#22D3EE;--c2:#A78BFA;--c3:#F472B6;--ga:rgba(34,211,238,.5);--gc:rgba(139,92,246,.42);--gb:rgba(52,211,153,.14);--glow:rgba(34,211,238,.45)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:16px/1.55 "Hanken Grotesk",system-ui,sans-serif;background:radial-gradient(1300px 760px at 50% 0,var(--ga),transparent 70%),radial-gradient(800px 560px at 88% 0,var(--gc),transparent 70%),radial-gradient(1100px 420px at 50% 100%,var(--gb),transparent 70%),var(--bg);background-repeat:no-repeat;background-color:var(--bg)}
+h1,h2,h3,b{font-family:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:80px 18px 0}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px 90px;box-sizing:border-box}
+.eyebrow{margin:0 0 18px;color:var(--mut);letter-spacing:.22em;text-transform:uppercase;font-size:.78rem;animation:rise 1s both}
+.hero h1{display:flex;flex-direction:column;align-items:center}.hc{display:flex;flex-direction:column;align-items:center;transition:opacity .25s linear,transform .25s linear,filter .25s linear;will-change:opacity,transform}.cue{transition:opacity .25s linear}
+.u{font:800 clamp(3rem,13vw,9.5rem)/1 "Unbounded","Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.03em;padding:0 .05em .08em;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c3),var(--c1));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 7s linear infinite,rise 1.2s both;filter:drop-shadow(0 0 38px var(--glow))}
+.e{margin-top:10px;font:600 clamp(1rem,3.6vw,2.3rem)/1.2 "Unbounded","Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;animation:rise 1.4s .15s both}
+.tag{max-width:560px;margin:24px 0 0;color:var(--mut);font-size:1.1rem;animation:rise 1.4s .35s both}
+.cue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--mut);font-size:.75rem;letter-spacing:.24em;text-transform:uppercase}
+.cue i{width:1px;height:40px;background:linear-gradient(var(--c1),transparent);animation:drip 2.2s ease-in-out infinite}
+.st{font:800 clamp(1.5rem,4vw,2.4rem)/1.15 "Unbounded","Bricolage Grotesque",system-ui,sans-serif;text-align:center;margin:0}
+.lede{text-align:center;color:var(--mut);max-width:620px;margin:12px auto 36px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.fc{--c:#22D3EE;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:24px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.fc:hover,.fc:focus-visible{transform:translateY(-7px);border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 14px 44px -10px var(--c);outline:0}
+.fc svg{width:36px;height:36px;fill:none;stroke:var(--c);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:14px}
+.fc h3{font-size:1.2rem;margin-bottom:6px}.fc p{margin:0;color:var(--mut);font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.form{max-width:600px;margin:0 auto;box-shadow:0 20px 70px -30px var(--glow)}
+.fhd{font-size:1.2rem;margin:0}h3.sub{font-size:.98rem;margin:18px 0 0}
+.note{color:var(--mut);font-size:.84rem}
+label{display:block;font-size:.85rem;color:var(--mut);margin-top:10px}
+input,select{width:100%;box-sizing:border-box;padding:8px 9px;margin-top:3px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+:focus-visible{outline:3px solid var(--c1);outline-offset:2px}
+.btn{width:100%;margin-top:18px;padding:15px;border:0;border-radius:12px;font:700 1.08rem "Hanken Grotesk",sans-serif;color:var(--onb);background:linear-gradient(90deg,var(--c1),var(--c2));box-shadow:0 10px 34px -8px var(--c1);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px -8px var(--c2)}
+.bw{opacity:0;translate:0 90px;scale:.88;transition:opacity .6s ease,translate .9s cubic-bezier(.4,0,.2,1),scale .9s cubic-bezier(.4,0,.2,1)}.bw.in{opacity:1;translate:0 0;scale:1;transition:opacity 1.6s ease .2s,translate 1.9s cubic-bezier(.2,.8,.2,1) .2s,scale 1.9s cubic-bezier(.2,.8,.2,1) .2s}
+.rv{opacity:0;translate:0 44px;scale:.95;filter:blur(7px);transition:opacity .6s ease,translate .7s cubic-bezier(.4,0,.2,1),scale .7s cubic-bezier(.4,0,.2,1),filter .6s ease}.rv.in{opacity:1;translate:0 0;scale:1;filter:none;transition:opacity .9s ease calc(var(--i,0)*.13s),translate 1s cubic-bezier(.2,.8,.2,1) calc(var(--i,0)*.13s),scale 1s cubic-bezier(.2,.8,.2,1) calc(var(--i,0)*.13s),filter .9s ease calc(var(--i,0)*.13s)}
+.fc.rv{transition:opacity .6s ease,translate .7s cubic-bezier(.4,0,.2,1),scale .7s cubic-bezier(.4,0,.2,1),filter .6s ease,transform .25s,border-color .25s,box-shadow .25s}.fc.rv.in{transition:opacity .9s ease calc(var(--i,0)*.13s),translate 1s cubic-bezier(.2,.8,.2,1) calc(var(--i,0)*.13s),scale 1s cubic-bezier(.2,.8,.2,1) calc(var(--i,0)*.13s),filter .9s ease calc(var(--i,0)*.13s),transform .25s,border-color .25s,box-shadow .25s}
+.lk{margin:0;padding:3px 10px;font:600 .78rem "Hanken Grotesk",sans-serif;background:none;color:var(--cr);border:1px solid var(--cr);border-radius:6px;cursor:pointer}
+#msg{margin-top:8px;color:var(--cr);font-size:.9rem}#lg div{margin-top:4px;font-size:.82rem;color:var(--mut)}
+.bn{padding:11px 16px;border-left:5px solid;border-radius:8px;background:var(--card);margin-bottom:10px;font-weight:600}
+.bn.cr{border-color:var(--cr);color:var(--cr)}.bn.wa{border-color:var(--wa);color:var(--wa)}.bn.ok{border-color:var(--st);color:var(--st)}
+.resw{--r1:#22D3EE;--r2:#34D399;--r3:#818CF8;position:relative;border-radius:22px;animation:spin 5s linear infinite}
+.resw::before{content:"";position:absolute;inset:-2px;border-radius:24px;background:conic-gradient(from var(--a),var(--r1),var(--r2),var(--r3),var(--r1));filter:blur(24px);opacity:.6}
+.resw.crit{--r1:#FF2D2D;--r2:#FF8A00;--r3:#B80020;animation-duration:2.2s}
+.res{position:relative;border:4px solid transparent;border-radius:22px;padding:24px;background:linear-gradient(var(--card),var(--card)) padding-box,conic-gradient(from var(--a),var(--r1),var(--r2),var(--r3),var(--r1)) border-box}
+.res.pop{animation:rise .7s cubic-bezier(.2,.8,.2,1)}
+.big b{font-size:clamp(2.8rem,9vw,4.4rem);font-weight:800;line-height:1}.crit .big b{color:var(--cr)}
+.det{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:14px 0}
+.bd{padding:3px 11px;border-radius:99px;font-weight:600;color:var(--onb)}.bd.st{background:var(--st)}.bd.gr{background:var(--gr)}.bd.cr{background:var(--cr)}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:6px}
+.kp b{display:block;font-size:1.5rem;font-weight:800}.kp span{color:var(--mut);font-size:.85rem}
+.sh{display:flex;justify-content:space-between;align-items:center;font-size:1.2rem;margin:32px 0 12px}
+#ch svg{width:100%;height:auto;display:block}svg *:not(rect){pointer-events:none}svg rect[data-t]{cursor:pointer}
+.lg2{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.84rem;color:var(--mut);margin-top:6px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.tw{overflow:auto;max-height:420px}table{width:100%;border-collapse:collapse;font-size:.9rem}
+td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}td:first-child,th:first-child{text-align:left}
+th{color:var(--mut);font-weight:600;position:sticky;top:0;background:var(--card)}tr[data-t]{cursor:pointer}
+.m-st{color:var(--st)}.m-gr{color:var(--gr)}.m-cr{color:var(--cr);font-weight:600}
+.form{position:relative}.zap{position:absolute;left:-10px;top:-10px;overflow:visible;pointer-events:none;opacity:0;transition:opacity .35s;filter:drop-shadow(0 0 9px var(--c1)) drop-shadow(0 0 22px var(--c2))}.thinking .zap{opacity:1}
+.zap rect{fill:none;stroke-linecap:round}.zr1{stroke:var(--c1);stroke-width:2;opacity:.9}.zr2{stroke:var(--c3);stroke-width:3.5;stroke-dasharray:70 230;animation:run .9s linear infinite}.zr3{stroke:var(--c2);stroke-width:3;stroke-dasharray:50 250;animation:run 1.4s linear infinite reverse}
+.form.thinking{box-shadow:0 0 0 1px var(--c1),0 0 70px -8px var(--c1)}
+.btn.busy{pointer-events:none;background:linear-gradient(90deg,var(--c2),var(--c1),var(--c2));background-size:200% 100%;animation:shine 1s linear infinite}
+.th{margin-top:10px;min-height:1.4em;text-align:center;color:var(--c1);font-weight:600;font-size:.92rem}
+@keyframes run{to{stroke-dashoffset:-300}}@keyframes shine{to{background-position:-200% 0}}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:translateY(80px) scale(.88)}60%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes flow{to{background-position:-300% 0}}@keyframes spin{to{--a:360deg}}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rv,.bw{opacity:1;translate:none;scale:none;filter:none}.hc{opacity:1!important;transform:none!important;filter:none!important}}
+.sdn{margin-bottom:4px}.sdr{display:flex;gap:16px;padding:14px 0;border-top:1px solid var(--line);align-items:flex-start}.sdt{min-width:78px;font-weight:700;font-size:1.2rem}.sdt small{display:block;font-weight:400;font-size:.72rem;color:var(--mut)}.sdb b{display:block;margin-bottom:6px}.sdb .note{display:block;margin-top:6px}.sdb .bd{font-size:.82rem}
+.ub{margin-top:10px;padding:10px 20px;border:0;border-radius:99px;font-weight:700;background:var(--gr);color:var(--onb);cursor:pointer}.ub:disabled{opacity:.4;cursor:not-allowed}
+</style></head><body>
+<header class="hero">
+<div class="hc"><p class="eyebrow">Smart microgrid · hourly demand forecasting</p>
+<h1><span class="u">Ultron</span><span class="e">Energy Predictor</span></h1>
+<p class="tag">Give it an hour and the weather. It tells you the load, the grid mode and the risk.</p></div>
+<span class="cue" aria-hidden="true">Scroll<i></i></span>
+</header>
+<main>
+<section class="wrap">
+<h2 class="st rv">What Ultron can do</h2>
+<p class="lede rv">One model, four jobs. Hover a card to see it light up.</p>
+<div class="cards">
+<article class="fc rv" tabindex="0" style="--c:#22D3EE;--i:0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><h3>Forecast any hour</h3><p>Give Ultron the hour, ambient temperature, humidity and solar light. It returns the expected demand in kW.</p></article>
+<article class="fc rv" tabindex="0" style="--c:#A78BFA;--i:1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg><h3>Switch the grid</h3><p>Above 160 kW, or any time from 18:00 to 22:00, Ultron moves the load to renewable storage. Otherwise it stays on the main grid.</p></article>
+<article class="fc rv" tabindex="0" style="--c:#FB7185;--i:2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 20h20zM12 10v4M12 17v.5"/></svg><h3>Raise the alarm</h3><p>At 200 kW or more, Ultron flags a critical overload in red, whatever the grid mode.</p></article>
+<article class="fc rv" tabindex="0" style="--c:#FBBF24;--i:3"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><h3>Plan extra energy</h3><p>Need more power at a certain hour? Enter the amount and the reason, and Ultron re-checks the grid mode and the battery.</p></article>
+</div>
+</section>
+<section class="wrap">
+<h2 class="st rv">Ask Ultron</h2>
+<p class="lede rv">Pick the hour and describe the weather. The forecast button rises as you arrive.</p>
+<div class="card form rv" id="fcard"><svg class="zap" id="zap" aria-hidden="true"><defs><filter id="bolt" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence id="zapT" type="turbulence" baseFrequency="0.045" numOctaves="3" seed="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G"/></filter></defs><g filter="url(#bolt)"><rect class="zr1"/><rect class="zr2"/><rect class="zr3"/></g></svg>
+<h2 class="fhd">Hour to forecast</h2>
+<div class="two"><label>Date<input type="date" id="fd"></label><label>Hour<select id="fh"></select></label></div>
+<label>Ambient temperature °C<input type="number" id="fa" value="32" step="0.1"></label>
+<div class="two"><label>Humidity %<input type="number" id="fu" value="55"></label><label>Solar irradiance W/m²<input type="number" id="fs" value="200"></label></div>
+<h3 class="sub">Extra energy (optional)</h3>
+<label>Extra energy needed in this hour (kW)<input type="number" id="xk" min="0" value="0"></label>
+<label>Reason for the extra energy<input type="text" id="xr" placeholder="e.g. Factory machine test run"></label>
+<h3 class="sub">Battery</h3>
+<div class="two"><label>Capacity kWh<input type="number" id="cap" value="1500"></label><label>Charge now %<input type="number" id="s0" value="0"></label></div>
+<p class="note">In storage mode the battery covers the whole hour’s demand; on main grid it recharges at 100 kW.</p>
+<div class="bw"><button class="btn" id="fb">Forecast this hour</button></div>
+<div class="bw" style="margin-top:8px"><button type="button" class="ub" id="f24">Forecast next 24 hours</button></div>
+<p class="note">The 24-hour button builds the other 23 hours from a typical daily weather curve around your inputs.</p>
+<div id="msg" aria-live="polite"></div><div class="th" id="th" aria-live="polite"></div>
+<h3 class="sub">Or upload a CSV of hours</h3>
+<label>timestamp, ambient_temp_c, humidity_pct, solar_irradiance_wm2<input type="file" id="f" accept=".csv,.txt,text/csv"></label>
+<button type="button" class="ub" id="ub" disabled>Upload and analyze</button>
+<div id="lg"></div>
+</div>
+</section>
+<section class="wrap" style="padding-bottom:70px">
+<div id="bn"></div>
+<div class="resw rv" id="rw"><div class="res" id="rs"></div></div>
+<h2 class="sh rv">Switching schedule</h2>
+<div class="card rv" id="sd"></div>
+<h2 class="sh rv">Forecast hours <button class="lk" id="cl">Clear all</button></h2>
+<div class="card rv"><div id="ch"></div>
+<div class="lg2"><span><i class="sw" style="background:var(--st)"></i>Renewable storage</span><span><i class="sw" style="background:var(--gr)"></i>Main grid</span><span><i class="sw" style="background:var(--cr)"></i>Critical overload</span><span>Lighter top = extra energy · dashed: 160 kW switch level, 200 kW overload</span></div>
+<div class="tw" id="tb" style="margin-top:14px"></div></div>
+<p class="note" id="mi" style="text-align:center;margin-top:26px"></p>
+</section>
+</main>
+<script>
+const M={"h": [91.2941, 92.3276, 93.0488, 92.2146, 91.8356, 92.0919, 134.6908, 174.2222, 175.2694, 176.1699, 146.2168, 145.353, 144.5559, 145.4673, 145.6669, 145.0384, 146.2854, 145.5639, 199.1532, 200.2827, 200.3056, 199.5927, 198.9258, 112.0742], "k": [24], "c": [8.5959], "t": -0.0276, "u": -0.0201, "s": 0.0013, "rmse": 8.28, "n": 4000},$=s=>document.querySelector(s),z=n=>String(n).padStart(2,"0"),esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+let LOG=[],sel="";
+const pred=r=>Math.max(0,M.h[+r.ts.slice(11,13)]+M.k.reduce((a,k,i)=>a+M.c[i]*Math.max(0,r.T-k),0)+M.t*r.T+M.u*r.H+M.s*r.S);
+function ctl(p,h){const ev=h>=18&&h<=22;return{store:p>160||ev,crit:p>=200,why:[p>160&&"Demand above 160 kW",ev&&"Evening window 18:00–22:00"].filter(Boolean).join(" and ")||"Demand at or below 160 kW, outside 18:00–22:00"}}
+function calc(r){const cap=Math.max(1,+$("#cap").value||1),e0=cap*Math.min(100,Math.max(0,+$("#s0").value||0))/100,b=Math.round((r.b!=null?r.b:pred(r))*100)/100,p=Math.round((b+r.k)*100)/100,c=ctl(p,+r.ts.slice(11,13));let e=e0;if(c.store)e=Math.max(0,e0-p);else e=Math.min(cap,e0+100);return{...r,b,p,c,e0,short:c.store&&p>e0,pct0:100*e0/cap,pct:100*e/cap}}
+function fill(a){const ok=a.map((v,i)=>isFinite(v)?i:-1).filter(i=>i>=0);if(!ok.length)return null;return a.map((v,i)=>{if(isFinite(v))return v;const p=ok.filter(j=>j<i).pop(),q=ok.find(j=>j>i);return p==null?a[q]:q==null?a[p]:a[p]+(a[q]-a[p])*(i-p)/(q-p)})}
+function clean(raw){const L=[],nm={T:"temperature",H:"humidity",S:"solar"};let r=raw.filter(x=>/^\d{4}-\d{2}-\d{2}[ T]\d{2}/.test(x.ts||""));
+if(r.length<raw.length)L.push(`Dropped ${raw.length-r.length} rows with unreadable timestamps.`);
+r.forEach(x=>x.ts=x.ts.replace("T"," ").slice(0,13)+":00:00");r.sort((a,b)=>a.ts<b.ts?-1:1);
+const n0=r.length;r=r.filter((x,i)=>i==0||x.ts!==r[i-1].ts);if(r.length<n0)L.push(`Removed ${n0-r.length} duplicate hours.`);
+const lim={T:[-30,60,25],H:[0,100,60],S:[0,1400,0]};
+for(const k in lim){const a=r.map(x=>x[k]),m=a.filter(v=>!isFinite(v)).length,f=fill(a)||a.map(()=>lim[k][2]);if(m)L.push(`Filled ${m} missing ${nm[k]} values by interpolation.`);
+let c=0;r.forEach((x,i)=>{const v=Math.min(lim[k][1],Math.max(lim[k][0],f[i]));if(v!==f[i])c++;x[k]=v});if(c)L.push(`Clipped ${c} out-of-range ${nm[k]} values.`)}
+if(r.length>72){L.push(`Using the first 72 of ${r.length} hours.`);r=r.slice(0,72)}return{r,L}}
+function csv(t){const ls=t.replace(/^\uFEFF/,"").trim().split(/\r?\n/),hd=ls[0].split(",").map(s=>s.trim().replace(/^"|"$/g,"").toLowerCase()),ix=k=>hd.indexOf(k);
+return ls.slice(1).map(l=>{const c=l.split(",").map(v=>v.replace(/^\s*"|"\s*$/g,""));return{ts:(c[ix("timestamp")]||"").trim(),T:parseFloat(c[ix("ambient_temp_c")]),H:parseFloat(c[ix("humidity_pct")]),S:parseFloat(c[ix("solar_irradiance_wm2")])}})}
+const put=r=>{LOG=LOG.filter(x=>x.ts!==r.ts);LOG.push(r);sel=r.ts};
+const THK=["Reading your hour…","Checking temperature, humidity and solar…","Running the demand model…","Applying the grid switching rules…","Checking the battery…"];let busy=false;
+function think(fn){if(busy)return;busy=true;const c=$("#fcard"),b=$("#fb"),th=$("#th"),sv=$("#zap"),w=c.offsetWidth,h=c.offsetHeight;
+sv.setAttribute("width",w+20);sv.setAttribute("height",h+20);sv.querySelectorAll("rect").forEach(r=>{r.setAttribute("x",10);r.setAttribute("y",10);r.setAttribute("width",w);r.setAttribute("height",h);r.setAttribute("rx",18)});
+c.classList.add("thinking");b.classList.add("busy");b.textContent="Ultron is thinking…";let i=0,s=1;th.textContent=THK[0];
+const t1=RM?0:setInterval(()=>$("#zapT").setAttribute("seed",s=s%60+1),70),t2=setInterval(()=>{th.textContent=THK[++i%THK.length]},440);
+setTimeout(()=>{clearInterval(t1);clearInterval(t2);c.classList.remove("thinking");b.classList.remove("busy");b.textContent="Forecast this hour";th.textContent="";busy=false;fn()},2200)}
+let SRC="";
+async function api(rows){try{const go=()=>fetch("/api/forecast",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({rows})});let r=await go();if([408,502,503,504].includes(r.status))r=await go();
+if(!r.ok){const j=await r.json().catch(()=>({})),e=new Error(j.error||(r.status==408?"The server took too long to answer (408). Press the button again; the first request after a pause can be slow.":"Server error "+r.status));e.bad=r.status<500;throw e}return await r.json()}
+catch(e){if(e.bad)throw e;const c=clean(rows.map(x=>({...x})));return{rows:c.r.map(x=>({...x,b:pred(x)})),log:c.L,source:"browser"}}}
+function forecast(u){const d=$("#fd").value,v=id=>parseFloat($(id).value),T=v("#fa"),H=v("#fu"),S=v("#fs"),k=Math.max(0,v("#xk")||0),w=$("#xr").value.trim(),m=$("#msg");
+if(!d){m.textContent="Please choose a date.";return}if(![T,H,S].every(isFinite)){m.textContent="Please fill in temperature, humidity and solar irradiance.";return}
+if(k>0&&!w){m.textContent="Please tell us the reason for the extra energy.";$("#xr").focus();return}
+m.textContent="";const row={ts:`${d} ${z(+$("#fh").value)}:00:00`,T,H,S},p=api([row]);
+const go=async()=>{try{const o=await p;LOG=[];put({...row,...o.rows[0],k,w});SRC=o.source;$("#lg").innerHTML=(o.log||[]).map(x=>`<div>${esc(x)}</div>`).join("");render();
+if(u){const r=$("#rs");r.classList.remove("pop");void r.offsetWidth;r.classList.add("pop");$("#rw").scrollIntoView({behavior:"smooth",block:"center"})}}catch(err){m.textContent=err.message}};
+if(u)think(go);else go()}
+function seq(R){const cap=Math.max(1,+$("#cap").value||1),c0=cap*Math.min(100,Math.max(0,+$("#s0").value||0))/100;let e=0,pt=null;
+return R.map((r,i)=>{const t=Date.parse(r.ts.replace(" ","T")+"Z"),cont=pt!==null&&t-pt===36e5,e0=cont?e:c0,st=r.c.store;e=st?Math.max(0,e0-r.p):Math.min(cap,e0+100);pt=t;
+return{...r,e0,brk:i>0&&!cont,pct0:100*e0/cap,pct:100*e/cap,short:st&&r.p>e0}})}
+function sched(R){if(R.length<2)return{ev:[],html:`<p class="note">Switch signals need at least 2 consecutive hours. Press “Forecast next 24 hours” or upload a CSV of hours.</p>`};const T=r=>Date.parse(r.ts.replace(" ","T")+"Z"),pad=n=>String(n).padStart(2,"0"),hh=r=>r.ts.slice(11,16),
+f=(t,d0)=>{const d=new Date(t),s=pad(d.getUTCHours())+":00";return d.toISOString().slice(0,10)===d0?s:s+" ("+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())+")"},
+tl=a=>a.slice(0,4).map(hh).join(", ")+(a.length>4?` +${a.length-4} more`:""),
+tg=x=>`<span class="bd cr" style="margin:6px 6px 0 0;display:inline-block">${x}</span>`,ev=[];
+R.forEach((r,i)=>{if(i==0||r.brk||r.c.store!==R[i-1].c.store)ev.push({r,i})});
+const G='<span class="bd gr">Main grid</span>',B='<span class="bd st">Battery</span>';
+const rows=ev.map((e,k)=>{const r=e.r,m=r.c.store,nx=ev[k+1],seg=R.slice(e.i,nx?nx.i:R.length),last=seg[seg.length-1],cr=seg.filter(x=>x.c.crit),sh=seg.filter(x=>x.short),st=e.i==0||r.brk;
+const ttl=st?(e.i==0?"Start on ":"New forecast block: start on ")+(m?"battery":"main grid"):(m?"Switch to battery":"Switch back to main grid"),flow=st?(m?B:G):(m?G+" → "+B:B+" → "+G),
+dur=`${seg.length} h, ${hh(r)} to ${f(T(last)+36e5,r.ts.slice(0,10))}`;
+return `<div class="sdr"><div class="sdt">${hh(r)}<small>${r.ts.slice(5,10)}</small></div><div class="sdb"><b>${ttl}</b><div>${flow}</div><span class="note">${r.c.why} · battery ${Math.round(r.pct0)}% at start, ${Math.round(last.pct)}% at end · ${dur}</span>${cr.length?tg("Critical overload (200 kW or more) at "+tl(cr)):""}${sh.length?tg("Battery too low to cover "+tl(sh)):""}</div></div>`}).join("");
+const sw=ev.filter((e,k)=>k>0&&!e.r.brk).length,nb=R.filter(r=>r.c.store).length,gp=R.some(r=>r.brk);
+return{ev,html:`<div class="note sdn"><b>${sw} switch signal${sw==1?"":"s"}</b> · ${nb} h on battery · ${R.length-nb} h on main grid · battery ends at ${Math.round(R[R.length-1].pct)}%${gp?" · hours are not consecutive, so each block restarts from the starting charge":""}</div>`+rows}}
+function render(){LOG.sort((a,b)=>a.ts<b.ts?-1:1);const R=seq(LOG.map(calc));
+$("#mi").textContent=SRC==="quickml"?"Demand predicted by the Zoho Catalyst QuickML endpoint · grid rules run in the Ultron backend":SRC==="fallback"?"QuickML endpoint not configured or unreachable: showing the starter fallback formula, not the trained model":SRC==="browser"?`Backend unreachable: in-browser fallback model (ridge, validation RMSE ${M.rmse.toFixed(1)} kW), not QuickML`:"";
+if(!R.length){$("#bn").innerHTML="";$("#rs").innerHTML='<p class="note">Enter an hour on the left and press “Forecast this hour”.</p>';$("#ch").innerHTML="";$("#tb").innerHTML="";$("#sd").innerHTML="";return}
+const s=R.find(r=>r.ts==sel)||R[R.length-1],nc=R.filter(r=>r.c.crit).length;
+let bn=s.c.crit?`<div class="bn cr">Critical overload at ${s.ts.slice(11,16)}: ${s.p.toFixed(1)} kW is at or above 200 kW.</div>`:`<div class="bn ok">No critical overload expected for this hour.</div>`;
+if(s.short)bn+=`<div class="bn wa">The battery holds ${Math.round(s.e0)} kWh, less than the ${s.p.toFixed(0)} kWh this hour needs.</div>`;
+if(nc>1)bn+=`<div class="bn cr">${nc} of the ${R.length} forecast hours are in critical overload.</div>`;$("#bn").innerHTML=bn;$("#rw").classList.toggle("crit",s.c.crit);
+$("#rs").innerHTML=`<div class="big"><b>${s.p.toFixed(1)}</b> kW <span class="note">forecast demand for ${s.ts.slice(0,16)}</span></div><div class="det"><span class="bd ${s.c.store?"st":"gr"}">${s.c.store?"Renewable storage mode":"Main grid mode"}</span>${s.c.crit?'<span class="bd cr">Critical overload</span>':""}<span class="note">${s.c.why}</span></div><div class="kp"><div><b>${s.b.toFixed(1)} kW</b><span>Model forecast</span></div><div><b>${s.k>0?"+"+s.k+" kW":"None"}</b><span>${s.k>0?"Extra energy: "+esc(s.w):"Extra energy"}</span></div><div><b>${Math.round(s.pct0)}% → ${Math.round(s.pct)}%</b><span>Battery over this hour</span></div></div>`;
+const W=760,Ht=280,l=42,rr=10,t=12,bt=26,n=R.length,bw=(W-l-rr)/Math.max(n,8),mx=Math.max(240,Math.ceil((Math.max(...R.map(r=>r.p))+15)/20)*20),y=v=>t+(Ht-t-bt)*(1-v/mx),st=Math.ceil(n/10);
+let g=`<svg viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Forecast demand for each forecast hour">`;
+R.forEach((r,i)=>{const x=l+i*bw+bw*.12,w=bw*.76,c=r.c.crit?"var(--cr)":r.c.store?"var(--st)":"var(--gr)",o=r.ts==s.ts?' stroke="var(--ink)" stroke-width="2"':"";
+g+=`<rect data-t="${r.ts}" x="${x}" y="${y(r.b)}" width="${w}" height="${y(0)-y(r.b)}" fill="${c}"${o}/>`;if(r.k>0)g+=`<rect data-t="${r.ts}" x="${x}" y="${y(r.p)}" width="${w}" height="${y(r.b)-y(r.p)}" fill="${c}" opacity=".4"${o}/>`;
+if(i%st==0)g+=`<text x="${x+w/2}" y="${Ht-8}" text-anchor="middle" fill="var(--mut)" font-size="10">${r.ts.slice(5,13).replace(" ","·")}h</text>`});
+[160,200].forEach(v=>g+=`<line x1="${l}" x2="${W-rr}" y1="${y(v)}" y2="${y(v)}" stroke="${v==200?"var(--cr)":"var(--mut)"}" stroke-dasharray="5 4"/><text x="${l-5}" y="${y(v)+4}" text-anchor="end" fill="var(--mut)" font-size="11">${v}</text>`);
+$("#ch").innerHTML=g+`<text x="${l-5}" y="${y(0)+4}" text-anchor="end" fill="var(--mut)" font-size="11">0</text><text x="${l}" y="9" fill="var(--mut)" font-size="11">kW</text></svg>`;
+const SC=sched(R);$("#sd").innerHTML=SC.html;const si=R.indexOf(s),nx0=SC.ev.find(e=>e.i>si),nx=nx0&&!nx0.r.brk?nx0:null;
+$("#rs").insertAdjacentHTML("beforeend",`<p class="note" style="margin-top:12px">${nx?`Next switch: <b>${nx.r.ts.slice(11,16)}</b> → ${nx.r.c.store?"battery":"main grid"}`:"No further switch in this forecast."}</p>`);
+$("#tb").innerHTML="<table><tr><th>Time</th><th>Ambient °C</th><th>Humidity %</th><th>Solar W/m²</th><th>Forecast kW</th><th>Extra kW</th><th>Total kW</th><th>Grid mode</th><th>Alert</th><th>Battery after</th><th></th></tr>"+R.map(r=>`<tr data-t="${r.ts}"${r.ts==s.ts?' style="background:var(--bg)"':""}><td>${r.ts.slice(0,16)}</td><td>${r.T}</td><td>${r.H}</td><td>${r.S}</td><td>${r.b.toFixed(1)}</td><td title="${esc(r.w)}">${r.k>0?"+"+r.k:"–"}</td><td><b>${r.p.toFixed(1)}</b></td><td class="${r.c.store?"m-st":"m-gr"}">${r.c.store?"Renewable storage":"Main grid"}</td><td class="${r.c.crit?"m-cr":""}">${r.c.crit?"Critical overload":"–"}</td><td>${Math.round(r.pct)}%</td><td><button class="lk" data-r="${r.ts}">Remove</button></td></tr>`).join("")+"</table>"}
+const pick=e=>{const el=e.target.closest("[data-t],[data-r]");if(!el)return;if(e.target.dataset.r){LOG=LOG.filter(x=>x.ts!==e.target.dataset.r);sel=""}else sel=el.dataset.t;render()};
+$("#ch").onclick=$("#tb").onclick=pick;$("#cl").onclick=()=>{LOG=[];sel="";render()};$("#fb").onclick=()=>forecast(true);$("#cap").oninput=$("#s0").oninput=render;
+let PEND=null;const HDR=["timestamp","ambient_temp_c","humidity_pct","solar_irradiance_wm2"];
+$("#f").onchange=async e=>{const f=e.target.files[0];PEND=null;$("#ub").disabled=true;if(!f){$("#lg").innerHTML="";return}
+try{const t=(await f.text()).replace(/^\uFEFF/,""),hd=t.trim().split(/\r?\n/)[0].split(",").map(x=>x.trim().replace(/^"|"$/g,"").toLowerCase()),miss=HDR.filter(h=>!hd.includes(h));
+if(miss.length){$("#lg").innerHTML=`<div>“${esc(f.name)}” is missing column(s): ${miss.join(", ")}. Found: ${esc(hd.join(", "))}. Use a plain .csv file.</div>`;return}
+const rows=csv(t);if(!rows.length){$("#lg").innerHTML=`<div>“${esc(f.name)}” has no data rows.</div>`;return}
+PEND={name:f.name,rows};$("#ub").disabled=false;$("#lg").innerHTML=`<div>“${esc(f.name)}” is ready: ${rows.length} rows found. Press “Upload and analyze” to confirm.</div>`}
+catch(err){$("#lg").innerHTML=`<div>Could not read the file: ${esc(err.message)}</div>`}};
+$("#ub").onclick=async()=>{if(!PEND)return;const P=PEND;$("#ub").disabled=true;$("#lg").innerHTML=`<div>Analyzing “${esc(P.name)}”…</div>`;
+try{const o=await api(P.rows);LOG=[];o.rows.forEach(x=>put({...x,k:0,w:""}));SRC=o.source;sel=o.rows[0].ts;PEND=null;$("#f").value="";
+$("#lg").innerHTML=`<div>Analyzed ${o.rows.length} hours from “${esc(P.name)}”. Earlier hours were replaced.</div>`+(o.log||[]).map(x=>`<div>${esc(x)}</div>`).join("");render();$("#rw").scrollIntoView({behavior:"smooth",block:"start"})}
+catch(err){$("#lg").innerHTML=`<div>${esc(err.message)}</div>`;$("#ub").disabled=false}};
+function mk24(d,h0,T0,H0,S0){const c=h=>Math.cos((h-15)*Math.PI/12),sS=h=>Math.max(0,Math.sin((h-6)*Math.PI/12)),pk=sS(h0)>.1?Math.min(1400,S0/sS(h0)):800,t0=Date.parse(d+"T"+z(h0)+":00:00Z"),r1=x=>Math.round(x*10)/10;
+return[...Array(24)].map((_,i)=>{const t=new Date(t0+i*36e5),h=t.getUTCHours();return{ts:`${t.toISOString().slice(0,10)} ${z(h)}:00:00`,T:r1(T0+5*c(h)-5*c(h0)),H:r1(Math.min(100,Math.max(0,H0-12*c(h)+12*c(h0)))),S:Math.round(pk*sS(h))}})}
+$("#f24").onclick=async()=>{const d=$("#fd").value,v=id=>parseFloat($(id).value),T=v("#fa"),H=v("#fu"),S=v("#fs"),m=$("#msg");
+if(!d||![T,H,S].every(isFinite)){m.textContent="Please fill in the date, temperature, humidity and solar boxes.";return}
+m.textContent="Forecasting 24 hours…";const rows=mk24(d,+$("#fh").value,T,H,S),b=$("#f24");b.disabled=true;
+try{const o=await api(rows);LOG=[];o.rows.forEach(x=>put({...x,k:0,w:""}));SRC=o.source;sel=o.rows[0].ts;m.textContent="";
+$("#lg").innerHTML=`<div>24-hour forecast from ${o.rows[0].ts.slice(0,16)}. Weather for the other hours is estimated.</div>`+(o.log||[]).map(x=>`<div>${esc(x)}</div>`).join("");render();$("#rw").scrollIntoView({behavior:"smooth",block:"start"})}
+catch(err){m.textContent=err.message}b.disabled=false};
+const now=new Date();$("#fd").value=`${now.getFullYear()}-${z(now.getMonth()+1)}-${z(now.getDate())}`;
+$("#fh").innerHTML=[...Array(24)].map((_,h)=>`<option value="${h}">${z(h)}:00</option>`).join("");$("#fh").value=now.getHours();render();
+const rv=document.querySelectorAll(".rv,.bw"),RM=matchMedia("(prefers-reduced-motion:reduce)").matches,canRev=()=>!RM&&document.documentElement.scrollHeight>innerHeight+50;if("IntersectionObserver" in window){const io=new IntersectionObserver(es=>es.forEach(e=>{const t=e.target;if(e.intersectionRatio>=.2)t.classList.add("in");else if(e.intersectionRatio<.05&&canRev()&&e.boundingClientRect.top>=(e.rootBounds?e.rootBounds.bottom:innerHeight)-4)t.classList.remove("in")}),{threshold:[0,.05,.2]});rv.forEach(el=>io.observe(el))}else rv.forEach(el=>el.classList.add("in"));
+const hc=document.querySelector(".hc"),cu=document.querySelector(".cue");if(hc&&!RM&&"IntersectionObserver" in window)new IntersectionObserver(es=>es.forEach(e=>{const p=Math.min(1,(1-e.intersectionRatio)*1.5);hc.style.opacity=1-p;hc.style.transform=`translateY(${p*60}px) scale(${1-p*.08})`;hc.style.filter=p<.01?"none":`blur(${p*8}px)`;cu.style.opacity=Math.max(0,1-p*3)}),{threshold:Array.from({length:51},(_,i)=>i/50)}).observe(document.querySelector(".hero"));
+</script>
+</body></html>
